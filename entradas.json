@@ -1,11 +1,39 @@
 [
   {
+    "id": "2026-10-13",
+    "tipo": "predica",
+    "origen": "Oracional diario Casa de Oración La Roca - Ministro Dairo",
+    "versiculos": [
+      {
+        "ref": "Salmo 60, 1-2",
+        "texto": "En Dios solamente está acallada mi alma; De él viene mi salvación.\n2 Él solamente es mi roca y mi salvación; Es mi refugio, no resbalaré mucho."
+      }
+    ],
+    "espejo": {
+      "personaje": "",
+      "texto": ""
+    },
+    "recuerda": [
+      "Escuchar música de Dios, Leer Salmos = DIOS, pero el trasfondo es tener una relación con El donde nos abandonamos y nos refugiamos en El, donde dejamos el cansancio, el agobio y el desespero, y renovamos nuestras fuerzas en su amor.",
+      "Al orar el resultado debe ser experimentar descanso y paz, fruto de ese intercambio de cargas. Un alivio profundo e interno que viene de la intimidad con el señor. Encuentro paz y pienso mejor para mirar el futuro de una mejor manera, para entender las cosas que están a mi alrededor, para no estar en lucha con nuestras fuerzas que nos agota. MI ALMA DESCANSA EN DIOS."
+    ],
+    "fotos_titulo": "Esto me recordó esta predica / oración",
+    "fotos": [],
+    "autor": "@karyaraos_"
+  },
+  {
     "id": "2026-10-03",
     "tipo": "lectura",
     "origen": "Entrada de ejemplo — edítala desde nueva-entrada.html o reemplázala",
     "versiculos": [
-      { "ref": "Salmos 116:7", "texto": "«Vuelve, oh alma mía, a tu reposo, porque Jehová te ha hecho bien»." },
-      { "ref": "Romanos 12:2", "texto": "La renovación de la mente y la transformación práctica para comprobar la buena voluntad de Dios." }
+      {
+        "ref": "Salmos 116:7",
+        "texto": "«Vuelve, oh alma mía, a tu reposo, porque Jehová te ha hecho bien»."
+      },
+      {
+        "ref": "Romanos 12:2",
+        "texto": "La renovación de la mente y la transformación práctica para comprobar la buena voluntad de Dios."
+      }
     ],
     "espejo": {
       "personaje": "David",
