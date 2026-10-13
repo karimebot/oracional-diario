@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oracional diario</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  :root{
+    --ink:#4A3B5C; --ink-soft:#6C5A80;
+    --lavender:#D9CBEE; --lavender-deep:#A98FD1;
+    --pink:#F6D3E3; --pink-deep:#E08FB2;
+    --mint:#CDEFE1; --mint-deep:#4FA98A;
+    --gold:#F4E2B8; --gold-deep:#C9983A;
+    --paper:#FFFBFD; --line:rgba(74,59,92,.12);
+    --fs:clamp(15px,.3vw + 13.6px,17.5px);
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:#EFE7F6;font-family:'Nunito',sans-serif;color:var(--ink);min-height:100vh;padding:clamp(10px,2.4vw,28px) clamp(10px,2.4vw,24px) 50px;}
+  .page{max-width:900px;margin:0 auto;}
+
+  .nav{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .nav a,.nav button{font:inherit;font-weight:800;font-size:clamp(12.5px,.2vw + 12px,14.5px);text-decoration:none;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:9px 16px;cursor:pointer;}
+  .nav a:hover,.nav button:hover{border-color:var(--lavender-deep);}
+  .nav .dl{background:var(--lavender-deep);border-color:var(--lavender-deep);color:#fff;}
+  .nav .off{visibility:hidden;}
+
+  .canvas{width:100%;position:relative;overflow:hidden;background:var(--paper);border-radius:clamp(14px,2vw,24px);box-shadow:0 30px 60px rgba(90,60,120,.22);}
+  .blob{position:absolute;border-radius:50%;filter:blur(38px);opacity:.55;z-index:0;}
+  .b1{width:38%;height:260px;top:-90px;left:-8%;background:var(--lavender);}
+  .b2{width:34%;height:240px;top:-70px;right:-10%;background:var(--pink);}
+  .b3{width:40%;height:280px;bottom:-110px;left:-6%;background:var(--mint);}
+  .b4{width:30%;height:230px;bottom:-90px;right:-8%;background:var(--gold);opacity:.4;}
+  .content{position:relative;z-index:2;padding:clamp(18px,4vw,52px) clamp(16px,4.5vw,56px) clamp(18px,3vw,40px);display:flex;flex-direction:column;gap:clamp(16px,2.4vw,26px);}
+
+  .header-row{display:flex;gap:10px;flex-wrap:wrap;}
+  .pill{flex:1 1 200px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:11px 16px;display:flex;flex-direction:column;gap:2px;}
+  .pill-label{font-weight:800;font-size:clamp(10.5px,.2vw + 10px,12px);letter-spacing:.1em;text-transform:uppercase;color:var(--lavender-deep);}
+  .pill.pink .pill-label{color:var(--pink-deep);}
+  .pill-value{font-weight:700;font-size:var(--fs);color:var(--ink);line-height:1.4;}
+
+  .section-title{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(19px,1vw + 14px,27px);line-height:1.2;margin:0 0 10px;}
+  .divider{border:none;border-top:1px dashed var(--line);margin:0;}
+  .box{background:#FEFCFE;border:1px solid var(--line);border-radius:14px;padding:clamp(12px,1.6vw,18px) clamp(14px,1.8vw,20px);display:flex;gap:12px;align-items:flex-start;}
+  .dot{flex:0 0 auto;width:9px;height:9px;border-radius:50%;margin-top:.6em;}
+  .d-l{background:var(--lavender-deep);} .d-m{background:var(--mint-deep);} .d-g{background:var(--gold-deep);}
+  .stack{display:flex;flex-direction:column;gap:10px;}
+  .ref{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(15px,.4vw + 13.6px,19px);color:var(--pink-deep);display:block;margin-bottom:2px;}
+  .name{font-family:'Fraunces',serif;font-weight:600;font-style:italic;font-size:clamp(16px,.5vw + 14px,20px);color:var(--mint-deep);display:block;margin-bottom:2px;}
+  .txt{font-size:var(--fs);line-height:1.58;color:var(--ink-soft);}
+
+  .photo-label{font-weight:800;font-size:clamp(11.5px,.2vw + 11px,13px);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px;text-align:center;}
+  .photos{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+  .photos.n1{grid-template-columns:minmax(0,420px);justify-content:center;}
+  .photos.n2{grid-template-columns:repeat(2,1fr);}
+  .photos img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:14px;display:block;}
+
+  .brand{text-align:center;font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);opacity:.55;}
+  #msg{text-align:center;padding:60px 14px;font-size:var(--fs);color:var(--ink-soft);line-height:1.6;}
+  @media (max-width:520px){ .photos{gap:6px;} }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="nav">
+    <a href="index.html">← Historial</a>
+    <button class="dl" id="dl" hidden>↓ Descargar imagen</button>
+  </div>
+  <div id="msg">Cargando…</div>
+  <div class="canvas" id="canvas" hidden>
+    <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div>
+    <div class="content" id="content"></div>
+  </div>
+  <div class="nav" style="margin-top:14px;margin-bottom:0">
+    <a id="older" class="off" href="#">← Anterior</a>
+    <a id="newer" class="off" href="#">Siguiente →</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  var MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  var TIPOS={predica:'Prédica',lectura:'Lectura propia',espontanea:'Oración espontánea'};
+  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function fecha(id){var p=id.split('-');return (+p[2])+' de '+MESES[+p[1]-1]+', '+p[0];}
+  var id=new URLSearchParams(location.search).get('id');
+  var $msg=document.getElementById('msg');
+
+  fetch('entradas.json',{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(all){
+    all=all.slice().sort(function(a,b){return a.id<b.id?1:-1;});
+    var i=-1; for(var k=0;k<all.length;k++){ if(all[k].id===id){i=k;break;} }
+    if(i<0 && !id && all.length){ i=0; }
+    if(i<0){ $msg.innerHTML='No encontré esa entrada. <a href="index.html">Volver al historial</a>'; return; }
+    var e=all[i];
+    document.title='Oracional · '+fecha(e.id);
+
+    var h='';
+    h+='<div class="header-row"><div class="pill"><span class="pill-label">Fecha</span><span class="pill-value">'+esc(fecha(e.id))+'</span></div>'+
+       '<div class="pill pink"><span class="pill-label">Origen de la oración</span><span class="pill-value">'+(TIPOS[e.tipo]?esc(TIPOS[e.tipo])+(e.origen?' · ':''):'')+esc(e.origen)+'</span></div></div>';
+
+    if(e.versiculos&&e.versiculos.length){
+      h+='<div><div class="section-title">Busca en tu Biblia y ora con la Palabra</div><div class="stack">';
+      e.versiculos.forEach(function(v){ h+='<div class="box"><span class="dot d-l"></span><div><span class="ref">'+esc(v.ref)+'</span><span class="txt">'+esc(v.texto)+'</span></div></div>'; });
+      h+='</div></div><hr class="divider">';
+    }
+    if(e.espejo&&(e.espejo.personaje||e.espejo.texto)){
+      h+='<div><div class="section-title">Espejo bíblico: historias que inspiran</div><div class="box"><span class="dot d-m"></span><div><span class="name">'+esc(e.espejo.personaje)+'</span><span class="txt">'+esc(e.espejo.texto)+'</span></div></div></div><hr class="divider">';
+    }
+    if(e.recuerda&&e.recuerda.length){
+      h+='<div><div class="section-title">Recuerda y guarda en tu mente para meditar y rumiar en el día</div><div class="stack">';
+      e.recuerda.forEach(function(r){ h+='<div class="box"><span class="dot d-g"></span><div class="txt">'+esc(r)+'</div></div>'; });
+      h+='</div></div>';
+    }
+    if(e.fotos&&e.fotos.length){
+      var n=Math.min(e.fotos.length,3);
+      h+='<div><div class="photo-label">'+esc(e.fotos_titulo||'Esto me recordó esta predica / oración')+'</div><div class="photos n'+n+'">';
+      e.fotos.slice(0,3).forEach(function(f){ h+='<img alt="" src="fotos/'+esc(f)+'">'; });
+      h+='</div></div>';
+    }
+    if(e.autor) h+='<div class="brand">'+esc(e.autor)+'</div>';
+
+    document.getElementById('content').innerHTML=h;
+    $msg.hidden=true;
+    document.getElementById('canvas').hidden=false;
+    document.getElementById('dl').hidden=false;
+
+    var older=all[i+1], newer=all[i-1];
+    var a=document.getElementById('older'), b=document.getElementById('newer');
+    if(older){ a.href='entrada.html?id='+older.id; a.classList.remove('off'); a.textContent='← '+fecha(older.id); }
+    if(newer){ b.href='entrada.html?id='+newer.id; b.classList.remove('off'); b.textContent=fecha(newer.id)+' →'; }
+
+    document.getElementById('dl').addEventListener('click',function(){
+      if(!window.html2canvas){ alert('No se pudo cargar el generador de imágenes.'); return; }
+      html2canvas(document.getElementById('canvas'),{scale:2,useCORS:true}).then(function(c){
+        var l=document.createElement('a'); l.download='oracional-'+e.id+'.png'; l.href=c.toDataURL('image/png'); l.click();
+      });
+    });
+  }).catch(function(err){
+    $msg.innerHTML='No se pudo cargar <b>entradas.json</b> ('+esc(err.message)+'). <a href="index.html">Volver al historial</a>';
+  });
+})();
+</script>
+</body>
+</html>

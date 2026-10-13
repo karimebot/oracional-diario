@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Nueva entrada — Oracional diario</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{ --ink:#4A3B5C; --ink-soft:#6C5A80; --lavender:#D9CBEE; --lavender-deep:#A98FD1; --pink-deep:#E08FB2; --mint:#CDEFE1; --mint-deep:#4FA98A; --line:rgba(74,59,92,.14); --fs:clamp(15px,.3vw + 13.6px,17px); }
+  *{box-sizing:border-box;}
+  body{margin:0;background:#EFE7F6;font-family:'Nunito',sans-serif;color:var(--ink);padding:clamp(10px,2.4vw,28px) clamp(10px,2.4vw,24px) 60px;font-size:var(--fs);}
+  .page{max-width:820px;margin:0 auto;}
+  h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(26px,2vw + 16px,40px);margin:6px 0 4px;}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(18px,.8vw + 14px,24px);margin:0 0 12px;}
+  .top a{color:var(--lavender-deep);font-weight:800;text-decoration:none;font-size:14px;}
+  .card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:clamp(14px,2.4vw,26px);margin-top:16px;box-shadow:0 2px 14px rgba(90,60,120,.07);}
+  .steps{margin:0;padding-left:22px;line-height:1.7;color:var(--ink-soft);}
+  label{display:block;font-weight:800;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--lavender-deep);margin:14px 0 6px;}
+  input[type=text],input[type=date],select,textarea{width:100%;font:inherit;color:var(--ink);padding:11px 14px;border-radius:12px;border:1.5px solid var(--line);background:#FEFCFE;outline:none;}
+  input:focus,select:focus,textarea:focus{border-color:var(--lavender-deep);}
+  textarea{min-height:84px;resize:vertical;line-height:1.5;}
+  .row{display:grid;grid-template-columns:1fr 2fr;gap:8px;margin-bottom:8px;}
+  .row.one{grid-template-columns:1fr;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .btn{font:inherit;font-weight:800;font-size:14px;border:none;border-radius:999px;padding:11px 20px;cursor:pointer;background:var(--lavender-deep);color:#fff;}
+  .btn.ghost{background:#fff;color:var(--ink);border:1.5px solid var(--line);}
+  .btn.mint{background:var(--mint-deep);}
+  .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+  .photos{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;}
+  .ph{width:150px;font-size:12.5px;color:var(--ink-soft);}
+  .ph img{width:150px;height:150px;object-fit:cover;border-radius:12px;display:block;margin-bottom:4px;}
+  .ph a{color:var(--lavender-deep);font-weight:800;word-break:break-all;}
+  .status{font-size:14px;font-weight:700;color:var(--mint-deep);margin-top:8px;}
+  .status.bad{color:#C0527F;}
+  #out{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;min-height:220px;}
+  details summary{cursor:pointer;font-weight:800;color:var(--ink-soft);margin-top:12px;}
+  .hint{font-size:13.5px;color:var(--ink-soft);line-height:1.5;margin:4px 0 0;}
+  @media (max-width:560px){ .row,.grid2{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="top"><a href="index.html">← Historial</a></div>
+  <h1>Nueva entrada</h1>
+  <p class="hint">Esta página no publica nada por sí sola: prepara los datos y las fotos para que tú los subas a GitHub.</p>
+
+  <div class="card">
+    <h2>Cómo publicar (3 pasos)</h2>
+    <ol class="steps">
+      <li>Llena el formulario y presiona <b>Generar entradas.json</b>. Si agregas fotos, descarga también las fotos listas.</li>
+      <li>En GitHub, sube las fotos a la carpeta <b>fotos</b> (Add file → Upload files).</li>
+      <li>Abre <b>entradas.json</b> en GitHub (ícono del lápiz), selecciona todo, pega el contenido nuevo y presiona <b>Commit changes</b>. En 1 o 2 minutos aparece en el historial.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>Datos de la entrada</h2>
+    <label for="existente">Editar una entrada que ya existe (opcional)</label>
+    <select id="existente"><option value="">— Crear una nueva —</option></select>
+
+    <div class="grid2">
+      <div><label for="fecha">Fecha</label><input type="date" id="fecha"></div>
+      <div><label for="tipo">Origen (tipo)</label>
+        <select id="tipo"><option value="predica">Prédica</option><option value="lectura">Lectura propia</option><option value="espontanea">Oración espontánea</option></select></div>
+    </div>
+    <label for="origen">Origen (detalle)</label>
+    <input type="text" id="origen" placeholder="Ej: Prédica del pastor ___ / Lectura de Salmos / Oración espontánea">
+
+    <label>Busca en tu Biblia y ora con la Palabra</label>
+    <div id="vers"></div>
+    <button type="button" class="btn ghost" id="addVers">+ Agregar versículo</button>
+
+    <label>Espejo bíblico: historias que inspiran</label>
+    <div class="row"><input type="text" id="personaje" placeholder="Personaje (ej: David)"><textarea id="espejo" placeholder="Qué nos enseña su historia"></textarea></div>
+
+    <label>Recuerda y guarda en tu mente para meditar y rumiar en el día</label>
+    <div id="rec"></div>
+    <button type="button" class="btn ghost" id="addRec">+ Agregar punto</button>
+
+    <label for="fotosTitulo">Título de las fotos</label>
+    <input type="text" id="fotosTitulo" value="Esto me recordó esta predica / oración">
+    <label for="fotos">Fotos (hasta 3)</label>
+    <input type="file" id="fotos" accept="image/*" multiple>
+    <p class="hint">Las fotos se reducen a un tamaño liviano (máx. 1200 px) para que el sitio cargue rápido. Descárgalas con el nombre que se muestra y súbelas a la carpeta <b>fotos</b>.</p>
+    <div class="photos" id="photoList"></div>
+
+    <label for="autor">Firma</label>
+    <input type="text" id="autor" value="@karyaraos_">
+  </div>
+
+  <div class="card">
+    <h2>Resultado</h2>
+    <div class="status" id="loadStatus"></div>
+    <details id="pasteBox"><summary>¿No cargó el archivo actual? Pégalo aquí</summary>
+      <textarea id="paste" placeholder="Pega aquí el contenido actual de entradas.json"></textarea></details>
+    <div class="actions">
+      <button type="button" class="btn" id="gen">Generar entradas.json</button>
+      <button type="button" class="btn mint" id="copy">Copiar</button>
+      <button type="button" class="btn ghost" id="dlj">Descargar entradas.json</button>
+    </div>
+    <div class="status" id="genStatus"></div>
+    <label for="out">Contenido nuevo de entradas.json</label>
+    <textarea id="out" readonly></textarea>
+  </div>
+</div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id);};
+  var data=[]; var photos=[];
+
+  function today(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}
+  function addVers(ref,txt){
+    var d=document.createElement('div'); d.className='row';
+    d.innerHTML='<input type="text" class="vref" placeholder="Cita (ej: Salmos 116:7)"><textarea class="vtxt" placeholder="Texto o idea del versículo"></textarea>';
+    d.querySelector('.vref').value=ref||''; d.querySelector('.vtxt').value=txt||''; $('vers').appendChild(d);
+  }
+  function addRec(txt){
+    var d=document.createElement('div'); d.className='row one';
+    d.innerHTML='<textarea class="rtxt" placeholder="Idea para guardar y meditar"></textarea>'; d.querySelector('.rtxt').value=txt||''; $('rec').appendChild(d);
+  }
+  $('addVers').onclick=function(){addVers();}; $('addRec').onclick=function(){addRec();};
+
+  function clearForm(){
+    $('fecha').value=today(); $('tipo').value='predica'; $('origen').value='';
+    $('vers').innerHTML=''; addVers(); addVers();
+    $('personaje').value=''; $('espejo').value='';
+    $('rec').innerHTML=''; addRec(); addRec(); addRec();
+    $('fotosTitulo').value='Esto me recordó esta predica / oración'; $('autor').value='@karyaraos_';
+    photos=[]; $('fotos').value=''; renderPhotos();
+  }
+  function loadEntry(e){
+    $('fecha').value=e.id; $('tipo').value=e.tipo||'predica'; $('origen').value=e.origen||'';
+    $('vers').innerHTML=''; (e.versiculos||[]).forEach(function(v){addVers(v.ref,v.texto);}); if(!(e.versiculos||[]).length) addVers();
+    $('personaje').value=(e.espejo&&e.espejo.personaje)||''; $('espejo').value=(e.espejo&&e.espejo.texto)||'';
+    $('rec').innerHTML=''; (e.recuerda||[]).forEach(addRec); if(!(e.recuerda||[]).length) addRec();
+    $('fotosTitulo').value=e.fotos_titulo||''; $('autor').value=e.autor||'';
+    photos=[]; $('fotos').value=''; renderPhotos();
+  }
+
+  function fillSelect(){
+    var s=$('existente'); s.innerHTML='<option value="">— Crear una nueva —</option>';
+    data.slice().sort(function(a,b){return a.id<b.id?1:-1;}).forEach(function(e){
+      var o=document.createElement('option'); o.value=e.id; o.textContent=e.id+(e.origen?' · '+e.origen:''); s.appendChild(o);
+    });
+  }
+  $('existente').onchange=function(){
+    var id=this.value; if(!id){clearForm();return;}
+    for(var i=0;i<data.length;i++){ if(data[i].id===id){loadEntry(data[i]);break;} }
+  };
+
+  /* photos: resize + rename */
+  function photoName(i){return $('fecha').value+'-'+(i+1)+'.jpg';}
+  function renderPhotos(){
+    var box=$('photoList'); box.innerHTML='';
+    photos.forEach(function(p,i){
+      var d=document.createElement('div'); d.className='ph';
+      var url=URL.createObjectURL(p.blob);
+      d.innerHTML='<img src="'+url+'" alt=""><a href="'+url+'" download="'+photoName(i)+'">↓ '+photoName(i)+'</a>';
+      box.appendChild(d);
+    });
+  }
+  $('fecha').addEventListener('change',renderPhotos);
+  $('fotos').addEventListener('change',function(){
+    var files=Array.prototype.slice.call(this.files,0,3); photos=[];
+    var done=0; if(!files.length){renderPhotos();return;}
+    files.forEach(function(f,i){
+      var img=new Image(), u=URL.createObjectURL(f);
+      img.onload=function(){
+        var max=1200,w=img.width,h=img.height,k=Math.min(1,max/Math.max(w,h));
+        var c=document.createElement('canvas'); c.width=Math.round(w*k); c.height=Math.round(h*k);
+        c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+        c.toBlob(function(b){ photos[i]={blob:b}; if(++done===files.length){ renderPhotos(); } },'image/jpeg',0.82);
+        URL.revokeObjectURL(u);
+      };
+      img.src=u;
+    });
+  });
+
+  /* build entry + merge */
+  function build(){
+    var id=$('fecha').value; if(!id) throw new Error('Falta la fecha.');
+    var e={id:id,tipo:$('tipo').value,origen:$('origen').value.trim()};
+    e.versiculos=[].slice.call(document.querySelectorAll('#vers .row')).map(function(r){return {ref:r.querySelector('.vref').value.trim(),texto:r.querySelector('.vtxt').value.trim()};}).filter(function(v){return v.ref||v.texto;});
+    e.espejo={personaje:$('personaje').value.trim(),texto:$('espejo').value.trim()};
+    e.recuerda=[].slice.call(document.querySelectorAll('#rec .rtxt')).map(function(t){return t.value.trim();}).filter(Boolean);
+    e.fotos_titulo=$('fotosTitulo').value.trim();
+    if(photos.length){ e.fotos=photos.map(function(_,i){return photoName(i);}); }
+    else { var old=data.filter(function(x){return x.id===id;})[0]; e.fotos=(old&&old.fotos)||[]; }
+    e.autor=$('autor').value.trim();
+    return e;
+  }
+  function currentData(){
+    var raw=$('paste').value.trim();
+    if(raw){ var j=JSON.parse(raw); if(!Array.isArray(j)) throw new Error('El contenido pegado no es una lista JSON.'); return j; }
+    return data;
+  }
+  $('gen').onclick=function(){
+    var st=$('genStatus'); st.className='status';
+    try{
+      var e=build(), base=currentData();
+      var out=base.filter(function(x){return x.id!==e.id;}); out.push(e);
+      out.sort(function(a,b){return a.id<b.id?1:-1;});
+      $('out').value=JSON.stringify(out,null,2);
+      st.textContent='Listo: '+out.length+' entrada(s). Copia el contenido y pégalo en entradas.json en GitHub.';
+    }catch(err){ st.className='status bad'; st.textContent='Error: '+err.message; }
+  };
+  $('copy').onclick=function(){
+    var t=$('out'); if(!t.value){ $('genStatus').textContent='Primero presiona “Generar entradas.json”.'; return; }
+    t.select(); try{ document.execCommand('copy'); $('genStatus').className='status'; $('genStatus').textContent='Copiado. Ahora pégalo en entradas.json en GitHub.'; }catch(e){}
+    if(navigator.clipboard){ navigator.clipboard.writeText(t.value); }
+  };
+  $('dlj').onclick=function(){
+    var t=$('out').value; if(!t) return;
+    var a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([t],{type:'application/json'})); a.download='entradas.json'; a.click();
+  };
+
+  clearForm();
+  fetch('entradas.json',{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(j){
+    data=j; fillSelect(); $('loadStatus').textContent='Se cargaron '+j.length+' entrada(s) existentes.';
+  }).catch(function(){
+    $('loadStatus').className='status bad'; $('loadStatus').textContent='No se pudo cargar entradas.json automáticamente. Abre esta página desde tu sitio publicado o pega el contenido abajo.';
+    $('pasteBox').open=true;
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oracional diario</title>
+<meta name="description" content="Un recordatorio diario para no olvidar lo verdaderamente importante.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#4A3B5C; --ink-soft:#6C5A80;
+    --lavender:#D9CBEE; --lavender-deep:#A98FD1;
+    --pink:#F6D3E3; --pink-deep:#E08FB2;
+    --mint:#CDEFE1; --mint-deep:#4FA98A;
+    --gold:#F4E2B8; --gold-deep:#C9983A;
+    --paper:#FFFBFD; --line:rgba(74,59,92,.12);
+    --fs:clamp(15px,.3vw + 13.6px,17.5px);
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:#F3ECF8;font-family:'Nunito',sans-serif;color:var(--ink);min-height:100vh;position:relative;overflow-x:hidden;}
+  .blob{position:fixed;border-radius:50%;filter:blur(70px);opacity:.55;z-index:0;pointer-events:none;}
+  .b1{width:38vw;height:38vw;top:-12vw;left:-10vw;background:var(--lavender);}
+  .b2{width:32vw;height:32vw;top:-8vw;right:-10vw;background:var(--pink);}
+  .b3{width:40vw;height:40vw;bottom:-16vw;left:-8vw;background:var(--mint);}
+  .b4{width:30vw;height:30vw;bottom:-12vw;right:-8vw;background:var(--gold);opacity:.45;}
+  .wrap{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:0 clamp(14px,3vw,28px);}
+
+  .hero{text-align:center;padding:clamp(34px,7vw,80px) 0 clamp(18px,3vw,34px);}
+  .kicker{font-weight:800;font-size:clamp(11.5px,.3vw + 10.8px,13.5px);letter-spacing:.16em;text-transform:uppercase;color:var(--lavender-deep);}
+  .hero h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(34px,4vw + 14px,64px);margin:8px 0 10px;line-height:1.08;}
+  .hero p{margin:0 auto;max-width:640px;font-size:var(--fs);line-height:1.6;color:var(--ink-soft);}
+
+  .controls{display:flex;flex-direction:column;gap:12px;margin:8px 0 6px;}
+  .search{width:100%;padding:13px 18px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font:inherit;font-size:var(--fs);color:var(--ink);outline:none;}
+  .search:focus{border-color:var(--lavender-deep);}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:8px 16px;font:inherit;font-weight:700;font-size:clamp(12.5px,.2vw + 12px,14.5px);color:var(--ink-soft);cursor:pointer;}
+  .chip.on{background:var(--lavender-deep);border-color:var(--lavender-deep);color:#fff;}
+  #count{font-size:clamp(12.5px,.2vw + 12px,14px);font-weight:700;color:var(--ink-soft);margin:14px 2px 0;}
+
+  .month{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(20px,1vw + 15px,28px);margin:clamp(22px,3vw,34px) 0 12px;text-transform:capitalize;}
+  .list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:clamp(10px,1.4vw,18px);}
+  .card{display:flex;gap:clamp(12px,1.6vw,18px);align-items:flex-start;text-decoration:none;color:inherit;background:#fff;border:1px solid var(--line);border-radius:20px;padding:clamp(14px,1.8vw,20px);box-shadow:0 2px 14px rgba(90,60,120,.07);transition:transform .15s ease,box-shadow .15s ease;}
+  .card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(90,60,120,.14);}
+  .date{flex:0 0 auto;width:clamp(54px,6vw,66px);text-align:center;background:var(--lavender);border-radius:16px;padding:8px 0 7px;}
+  .date b{display:block;font-family:'Fraunces',serif;font-size:clamp(24px,2vw + 14px,32px);line-height:1;color:var(--ink);}
+  .date span{display:block;margin-top:3px;font-weight:800;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--lavender-deep);}
+  .body{min-width:0;flex:1;}
+  .meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:6px;}
+  .badge{font-weight:800;font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;padding:4px 10px;border-radius:999px;}
+  .t-predica{background:var(--lavender);color:#7A5FB3;}
+  .t-lectura{background:var(--mint);color:#2F8A6B;}
+  .t-espontanea{background:var(--pink);color:#C0527F;}
+  .origen{font-size:clamp(12.5px,.2vw + 12px,14px);font-weight:600;color:var(--ink-soft);}
+  .refs{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(15px,.4vw + 13.6px,18px);color:var(--pink-deep);margin-bottom:4px;}
+  .snip{margin:0;font-size:clamp(14px,.25vw + 13px,16px);line-height:1.5;color:var(--ink-soft);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+  .thumb{flex:0 0 auto;width:clamp(56px,7vw,84px);height:clamp(56px,7vw,84px);border-radius:14px;object-fit:cover;background:var(--lavender);}
+  #msg{text-align:center;color:var(--ink-soft);font-size:var(--fs);line-height:1.6;padding:30px 10px;}
+  footer{position:relative;z-index:1;text-align:center;padding:40px 14px 50px;font-weight:700;font-size:13px;letter-spacing:.1em;color:var(--ink-soft);opacity:.7;}
+  @media (max-width:520px){ .thumb{display:none;} }
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="kicker">Cada día</div>
+    <h1>Oracional diario</h1>
+    <p>Un recordatorio diario para no olvidar lo verdaderamente importante.</p>
+  </header>
+
+  <div class="controls">
+    <input class="search" id="q" type="search" placeholder="Buscar por palabra, versículo, personaje…" aria-label="Buscar">
+    <div class="chips" id="chips">
+      <button class="chip on" data-t="">Todas</button>
+      <button class="chip" data-t="predica">Prédica</button>
+      <button class="chip" data-t="lectura">Lectura propia</button>
+      <button class="chip" data-t="espontanea">Oración espontánea</button>
+    </div>
+  </div>
+  <div id="count"></div>
+  <div id="list"></div>
+  <div id="msg" hidden></div>
+</div>
+
+<footer id="foot">@karyaraos_</footer>
+
+<script>
+(function(){
+  var MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  var TIPOS={predica:'Prédica',lectura:'Lectura propia',espontanea:'Oración espontánea'};
+  var data=[], tipo='', q='';
+  var $list=document.getElementById('list'), $count=document.getElementById('count'), $msg=document.getElementById('msg');
+
+  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function parts(id){var p=id.split('-');return {y:+p[0],m:+p[1]-1,d:+p[2]};}
+  function hay(e){
+    var t=[e.origen,(e.espejo&&e.espejo.personaje),(e.espejo&&e.espejo.texto)];
+    (e.versiculos||[]).forEach(function(v){t.push(v.ref,v.texto);});
+    (e.recuerda||[]).forEach(function(r){t.push(r);});
+    return t.join(' ').toLowerCase();
+  }
+
+  function render(){
+    var list=data.filter(function(e){
+      if(tipo && e.tipo!==tipo) return false;
+      if(q && hay(e).indexOf(q)<0) return false;
+      return true;
+    });
+    $count.textContent = list.length + (list.length===1?' entrada':' entradas');
+    if(!list.length){ $list.innerHTML=''; $msg.hidden=false; $msg.textContent='No hay entradas que coincidan con tu búsqueda.'; return; }
+    $msg.hidden=true;
+    var html='', cur='';
+    list.forEach(function(e){
+      var p=parts(e.id), key=p.y+'-'+p.m;
+      if(key!==cur){ if(cur) html+='</div>'; html+='<h2 class="month">'+MESES[p.m]+' '+p.y+'</h2><div class="list">'; cur=key; }
+      var refs=(e.versiculos||[]).map(function(v){return v.ref;}).join(' · ');
+      var snip=(e.recuerda&&e.recuerda[0])||(e.espejo&&e.espejo.texto)||'';
+      var th=(e.fotos&&e.fotos[0])?'<img class="thumb" loading="lazy" alt="" src="fotos/'+esc(e.fotos[0])+'">':'';
+      html+='<a class="card" href="entrada.html?id='+esc(e.id)+'">'+
+        '<div class="date"><b>'+p.d+'</b><span>'+MESES[p.m].slice(0,3)+'</span></div>'+
+        '<div class="body"><div class="meta">'+(TIPOS[e.tipo]?'<span class="badge t-'+esc(e.tipo)+'">'+TIPOS[e.tipo]+'</span>':'')+
+        '<span class="origen">'+esc(e.origen)+'</span></div>'+
+        (refs?'<div class="refs">'+esc(refs)+'</div>':'')+
+        '<p class="snip">'+esc(snip)+'</p></div>'+th+'</a>';
+    });
+    $list.innerHTML = html+'</div>';
+  }
+
+  document.getElementById('q').addEventListener('input',function(e){q=e.target.value.trim().toLowerCase();render();});
+  document.getElementById('chips').addEventListener('click',function(e){
+    var b=e.target.closest('.chip'); if(!b) return;
+    tipo=b.getAttribute('data-t');
+    Array.prototype.forEach.call(this.children,function(c){c.classList.toggle('on',c===b);});
+    render();
+  });
+
+  fetch('entradas.json',{cache:'no-store'})
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(j){
+      data=j.slice().sort(function(a,b){return a.id<b.id?1:-1;});
+      if(data[0]&&data[0].autor) document.getElementById('foot').textContent=data[0].autor;
+      render();
+    })
+    .catch(function(err){
+      $msg.hidden=false;
+      $msg.innerHTML='No se pudo cargar <b>entradas.json</b> ('+esc(err.message)+').<br>Si abriste el archivo directamente desde tu computador, ábrelo desde la página publicada en GitHub Pages.';
+    });
+})();
+</script>
+</body>
+</html>
